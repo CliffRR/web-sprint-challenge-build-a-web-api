@@ -28,36 +28,22 @@ async function validateUserId(req, res, next) {
   }
   
 function validateUser(req, res, next) {
-    const { name, description } = req.body
-    if (!name || !name.trim() || !description || !description.trim()) {
+    const { notes, description, completed, project_id } = req.body
+    if (!notes || !notes.trim() || !description || !description.trim() || (completed != false && completed != true)
+    || !project_id ) {
       res.status(400).json({
         message: 'missing required name field',
       })
     } else {
-        req.name = name.trim()
+        req.notes = notes.trim()
         req.description = description.trim()
       next()
     }
   }
   
-function validatePost(req, res, next) {
-    const { text } = req.body
-    if (!text || !text.trim()) {
-      res.status(400).json({
-        message: 'missing required text field',
-      })
-    } else {
-      req.text = text.trim()
-      next()
-    }
-  }
-  
-  
-  // do not forget to expose these functions to other modules
 module.exports = {
     logger,
     validateUserId,
     validateUser,
-    validatePost,
 }
 
