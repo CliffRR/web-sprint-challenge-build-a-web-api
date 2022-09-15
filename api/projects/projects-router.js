@@ -24,7 +24,7 @@ router.get('/:id', validateUserId, (req, res) => {
 });
 
 router.post('/', validateUser, (req, res, next) => {
-    Post.insert({ name: req.name })
+    Post.insert({ name: req.name, description: req.description, completed: true })
     .then(newUser => {
       res.status(201).json(newUser)
     })
@@ -32,9 +32,9 @@ router.post('/', validateUser, (req, res, next) => {
 });
 
 router.put('/:id', validateUserId, validateUser, (req, res, next) => {
-    Post.update(req.params.id, { name: req.name })
+    Post.update(req.params.id, { name: req.name, description: req.description, completed: true })
     .then(() => {
-      return User.getById(req.params.id)
+      return Post.get(req.params.id)
     })
     .then(user => {
       res.json(user)
@@ -51,7 +51,7 @@ router.delete('/:id', validateUserId, async (req, res, next) => {
       }
 });
 
-router.get('/:id/posts', validateUserId, async (req, res, next) => {
+router.get('/:id/actions', validateUserId, async (req, res, next) => {
     try {
         const result = await Post.getProjectActions(req.params.id)
         res.json(result)
@@ -60,23 +60,23 @@ router.get('/:id/posts', validateUserId, async (req, res, next) => {
       }
 });
 
-router.post('/', (req, res, next) => {
-    Post.insert(
-        req.project
-        )
-        .then(project => {
-            res.status(201).json(project)
-        })
-        .catch(next) 
-});
+// router.post('/', (req, res, next) => {
+//     Post.insert(
+//         req.project
+//         )
+//         .then(project => {
+//             res.status(201).json(project)
+//         })
+//         .catch(next) 
+// });
 
-router.use((err, req, res, next) => { //eslint-disable-line
-    res.status(err.status || 500).json({
-        customMessage: 'something tragic inside posts router happened',
-        message: err.message,
-        stack: err.stack,
-    })
-})
+// router.use((err, req, res, next) => { //eslint-disable-line
+//     res.status(err.status || 500).json({
+//         customMessage: 'something tragic inside posts router happened',
+//         message: err.message,
+//         stack: err.stack,
+//     })
+// })
 
 module.exports = router
 

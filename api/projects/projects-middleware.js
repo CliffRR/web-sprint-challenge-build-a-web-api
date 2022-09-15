@@ -16,7 +16,6 @@ async function validateUserId(req, res, next) {
           res.status(404).json({
               message: 'user not found',
           })
-        // next({status: 404, message: 'user not found'})
       } else {
         req.user = user
         next()
@@ -27,22 +26,23 @@ async function validateUserId(req, res, next) {
       })
     }
   }
-  
-function validateUser(req, res, next) {
-    const { name } = req.body
-    if (!name || !name.trim()) {
+
+  function validateUser(req, res, next) {
+    const { name, description } = req.body
+    if (!name || !name.trim() || !description || !description.trim()) {
       res.status(400).json({
         message: 'missing required name field',
       })
     } else {
-      req.name = name.trim()
+        req.name = name.trim()
+        req.description = description.trim()
       next()
     }
   }
   
 function validatePost(req, res, next) {
     const { name, description } = req.body
-    if (!name || !name.trim() && !description || !description.trim()) {
+    if ((!name || !name.trim()) && (!description || !description.trim())) {
       res.status(400).json({
         message: 'missing required text field',
       })
